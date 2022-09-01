@@ -1,104 +1,295 @@
-# Backend - Trivia API
+# Getting Started
 
-## Setting up the Backend
+Trivia App is knowledge based app where students could engage themselve in searching questions, add question, and also delete questions organized in categories.
 
-### Install Dependencies
+## Base URL
 
-1. **Python 3.7** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+**Frontend:  http://localhost:3000/**
 
-2. **Virtual Environment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+**Backend: http://127.0.0.1:5000/**
 
-3. **PIP Dependencies** - Once your virtual environment is setup and running, install the required dependencies by navigating to the `/backend` directory and running:
+___
 
-```bash
-pip install -r requirements.txt
+
+# Guideline
+```
+  Kindly follow the PEP18-STYLE
+  Follow the collection/item/collection for the Routes
 ```
 
-#### Key Pip Dependencies
 
-- [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use to handle the lightweight SQL database. You'll primarily work in `app.py`and can reference `models.py`.
+___
+### Prerequisite & Installation
+  **Virtual Environment**
+    
+  Linux/Mac
+      
+      $ python -m venv ritaenv
+      $ source ritaenv/bin/activate
 
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross-origin requests from our frontend server.
 
-### Set up the Database
+  To deactivate the Virtual Environment
 
-With Postgres running, create a `trivia` database:
+      $ deactivate
 
-```bash
-createdb trivia
-```
+  **Backend**
+      
+      Note: Ensure you are are in the backend directory
 
-Populate the database using the `trivia.psql` file provided. From the `backend` folder in terminal run:
+  >pip installations
+      
+      $ pip3 install -r > requirements.txt
 
-```bash
-psql trivia < trivia.psql
-```
+  **Database Creation**
+  
+  Populate your table with trivia.psql 
 
-### Run the Server
+      $ createdb trivia
+      $ psql trivia < trivia.psql
 
-From within the `./src` directory first ensure you are working using your created virtual environment.
 
-To run the server, execute:
+  **Starting Server**
 
-```bash
-flask run --reload
-```
+      $ export FLASK_APP=flaskr
+      $ export FLASK_DEBUG=True
+      $ flask run --reload
 
-The `--reload` flag will detect file changes and restart the server automatically.
 
-## To Do Tasks
+  **Frontend**
 
-These are the files you'd want to edit in the backend:
+  > Make sure you are within the /frontend/src directory
 
-1. `backend/flaskr/__init__.py`
-2. `backend/test_flaskr.py`
+      $ npm install
+      $ npm start
 
-One note before you delve into your tasks: for each endpoint, you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior.
 
-1. Use Flask-CORS to enable cross-domain requests and set response headers.
-2. Create an endpoint to handle `GET` requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories.
-3. Create an endpoint to handle `GET` requests for all available categories.
-4. Create an endpoint to `DELETE` a question using a question `ID`.
-5. Create an endpoint to `POST` a new question, which will require the question and answer text, category, and difficulty score.
-6. Create a `POST` endpoint to get questions based on category.
-7. Create a `POST` endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question.
-8. Create a `POST` endpoint to get questions to play the quiz. This endpoint should take a category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions.
-9. Create error handlers for all expected errors including 400, 404, 422, and 500.
+___
+  
+# Testing
+> Ensure you are within the /backend directory
+  
+  Database creation
 
-## Documenting your Endpoints
+      $ createdb trivia_test
+      $ psql trivia_test < trivia.psql
 
-You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
+  Starting Server
 
-### Documentation Example
+      $ python test_flaskr.py
 
-`GET '/api/v1.0/categories'`
 
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
+# Error Handling
 
+  Error response is in json form, including the success, error type and and their error message.
+
+      Sample Resource
+
+      {
+        'success': False,
+        'error': 404,
+        'message': 'Page not found'
+      }
+
+Errors:
+   
+   1. **404** : Page not found
+   2. **400** : Bad request
+   3. **500** : Internal Server Error
+   4. **422** : Unprocessable Entity
+   5. **405** : Bad Method
+
+
+# API REFERENCES
+
+`GET /categories`
+  
+  
+  - Fetch categories as dictionary with key and value of corresponding category string
+  - Request Argument: None
+  - Returns: Key-Value representation of id and string of each category
+
+**Sample Response**
 ```json
 {
-  "1": "Science",
-  "2": "Art",
-  "3": "Geography",
-  "4": "History",
-  "5": "Entertainment",
-  "6": "Sports"
+  "categories": {
+    '1': 'Science',
+    '2': 'Art',
+    '3': 'Geography',
+    '4': 'History',
+    '5': 'Entertainment',
+    '6': 'Sports'
+  }
+}
+
+```
+
+`GET /questions`
+
+**General**
+  
+  - Fetch total questions
+  - Request Argument: page =>  Integer
+  - Returns: A paginated list of questions
+
+**Sample Response**
+```json
+{
+  "questions": [
+      {
+        "id": 1,
+        "question": "What Blockchain?",
+        "answer": "A cryptographic oriented database interlocked together by block",
+        "difficulty": 3,
+        "category": 4
+      },
+  ],
+  "totalQuestion": 17,
+  "category": {
+    '1': 'Science',
+    '2': 'Art',
+    '3': 'Geography,
+    '4': 'History,
+    '5': 'Entertainment',
+    '6': 'Sports',
+  },
+  'currentCategory': 3
 }
 ```
 
-## Testing
+`DELETE /questions/${question_id}
 
-Write at least one test for the success and at least one error behavior of each endpoint using the unittest library.
+**General**
 
-To deploy the tests, run
+- Delete Question based on the question id
+- Request Argument: question_id : int
+- Returns: A json value with success and message
 
+Sample Request
 ```bash
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
+  curl -X DELETE http://localhost:5000/questions/10
 ```
+
+Sample Response
+
+      {
+        'success': True,
+        'message': OK
+      }
+
+
+
+  `POST /questions`
+  **General**
+  
+  - Sends request that add question to trivia database
+  - Request Argument: None
+  - Request body:
+
+        {
+          'question': "Who's donald trump",
+          'answer': "America President",
+          'category': 3,
+          'difficulty': 4
+        }
+  - Return: A json with success equal to True
+  
+  Sample Response
+
+
+        {
+          'success': True
+        }
+
+
+`POST /questions/searchedTerm
+
+**General**
+
+- Get question based on the searchTerm in the request body
+- Request Argument: SearchTerm : String
+- Request Body: 
+
+      {
+          'searchTerm': 'what'
+      }
+
+- Returns: Matched question, current category and total questions
+
+Sample Response
+
+      {
+          'questions': [
+            {
+              'queston': "What country is the world power",
+              'answer': "United State of America",
+              'category': 2,
+              'difficulty': 1
+            }
+          ],
+          'total_questions': 3,
+          'current_Category': 2,
+      }
+
+
+`GET /categories/${id}/questions?page=${page_no}`
+
+**General**
+
+- Fetches paginated questions based on categories
+- Request Arguent: category_id, page : integers
+- Returns: A question that matches the category id, the current category and total questions count
+  
+Sample Response
+      
+      {
+        'questions': [
+        {
+          'question': 'Who is Marie Curie',
+          'answer': 'The mother of Radioactivity',
+          'category': 3,
+          'difficulty' 4
+        },
+        {
+          'question': 'Who is the founder of Facebook',
+          'answer': 'Mark Zuckerberg',
+          'category': 3,
+          'difficulty': 2
+        }
+      ],
+      'total_questions': 2,
+      'current_category': 3
+      }
+
+
+`POST /quizzes`
+**General**
+
+- retrieve a question that's not has yet been shown or whose id is not in the previous questions list
+- Request Argument: quiz_category : integer, previous_question: list
+- Request Body:
+  
+      {
+        'quiz_category': 2,
+        'previous_questions': [4, 5, 7]
+      }
+
+- Returns: A question dictionary and list of previous questions
+
+Sample Response
+
+    {
+      'question': {
+        'id': 4,
+        'question': 'Who is the Greatest footballer?',
+        'answer': 'Lionel Messi',
+        'category': 4,
+        'difficulty': 2
+      },
+      'previousQuestions': [3, 2, 17]
+    }
+
+
+
+## Authors
+1. Rita Bomki

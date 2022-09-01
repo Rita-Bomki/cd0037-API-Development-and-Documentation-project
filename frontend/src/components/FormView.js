@@ -47,7 +47,7 @@ class FormView extends Component {
       },
       crossDomain: true,
       success: (result) => {
-        document.getElementById('add-question-form').reset();
+        // document.getElementById('add-question-form').reset();
         return;
       },
       error: (error) => {
