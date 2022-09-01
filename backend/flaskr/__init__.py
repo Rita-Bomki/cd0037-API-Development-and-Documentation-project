@@ -73,13 +73,12 @@ def create_app(test_config=None):
     """
     @app.route('/questions', methods=['GET'])
     def get_paginated_questions():
-        page_number = request.args.get("page")
+        page_number = request.args.get("page",1, type=int)
         all_question = Question.query.all()
         all_category = Category.query.all()
 
         paginated_questions = paginate_question(page_number, all_question)
-
-
+        
         if len(paginated_questions) == 0:
             abort(404)
 
@@ -157,12 +156,14 @@ def create_app(test_config=None):
     def fetch_question_by_search_term():
         term_searched = request.get_json()['searchTerm']
         current_category_id = request.args.get('category')
+        categories = Category.query.all()
 
 
-        category = Category.query.get(current_category_id)
-
-        if category == None:
+        if int(current_category_id) > len(categories):
             abort(404)
+
+        # if category == None:
+        #     abort(404)
 
         # if current_category == 'null':
         #     current_category = None
@@ -170,11 +171,13 @@ def create_app(test_config=None):
         # if current_category is None:
         #     questions = Question.query.filter(Question.question.\
         #         ilike(f'%{term_searched}%')).all()
-        questions = Question.query.\
-            filter(Question.category == current_category_id).\
-                filter(Question.question.ilike(f'%{term_searched}%')).all()
+        if current_category_id == 'undefined':
+            questions = Question.query.filter(Question.question.\
+                ilike(f'%{term_searched}%')).all()
+        else:
+            questions = Question.query.filter(Question.category == current_category_id).filter(Question.question.ilike(f'% {term_searched}%')).all()
 
-        if len(questions) is None:
+        if questions == None:
             abort(404)
 
         questions_to_display = obtain_questions_list(questions)
@@ -185,6 +188,7 @@ def create_app(test_config=None):
             'total_questions': len(questions),
             'current_category': current_category_id
         }), 200
+
 
     """
     @TODO:
