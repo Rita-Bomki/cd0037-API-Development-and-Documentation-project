@@ -232,23 +232,24 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def fetch_quiz():
         body = request.get_json()
+        current_question = None
 
         try:
             category_id = body['quiz_category']['id']
             previous_questions = body['previous_questions']
 
-            current_category = Category.query.get(category_id)
+            current_category = Category.query.all()
 
-            if current_category == None:
+            if int(category_id) > len(current_category):
                 abort(404)
+
 
             if category_id == 0:
                 category_questions = Question.query.order_by(func.random()).all()
             else:
-                category_questions = Question.query.filter(Question.category == current_category.id).order_by(func.random()).\
+                category_questions = Question.query.filter(Question.category == category_id).order_by(func.random()).\
                     all()
 
-            
             for question in category_questions:
                 if question.id in previous_questions:
                     continue;
@@ -256,6 +257,7 @@ def create_app(test_config=None):
                     previous_questions.append(question.id)
                     current_question = question
                     break
+
             
             if current_question == None:
                 abort(404)
@@ -266,12 +268,13 @@ def create_app(test_config=None):
                     'question': current_question.question,
                     'answer': current_question.answer,
                     'difficulty': current_question.difficulty,
-                    'category': current_category.id
+                    'category': category_id
                 },
                 'previousQuestions': previous_questions
             }), 200
         except:
             abort(400)
+
 
 
     """
